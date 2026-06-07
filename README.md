@@ -4,12 +4,12 @@ Welcome to the repository for the CampusPulse campus-wide notification platform 
 
 ---
 
-## 🎥 Project Demo Videos
+##  Project Demo Videos
 *   **Demo**: https://drive.google.com/file/d/1SYnO9tQY32C9BfXe41zRg0YFN8Msj5z7/view?usp=drivesdkgit add README.md
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 ├── notification_system_design.md   # Written responses for Stages 1 to 6
@@ -28,7 +28,7 @@ Welcome to the repository for the CampusPulse campus-wide notification platform 
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### 1. Run the Priority Inbox CLI (Stage 6)
 To run the priority inbox script which fetches notifications, applies the Min-Heap sorting logic, and logs output:
@@ -60,7 +60,7 @@ Once started, open your browser and navigate to: **`http://localhost:3000/`**
 
 ---
 
-## 🛠️ Verification Done
+##  Verification Done
 *   **Design Specifications**: Full implementation of REST API contract, DB schema partitioning models, indexing math, performance tuning (caching/replicas), bulk queue recovery architecture, and heap sort logic.
 *   **Error Handling**: Embedded a safe JWT decoder inside the frontend to resolve base64url padding exceptions in browser-native `atob`.
 *   **CORS Bypass**: Integrated a development proxy in Vite to route relative requests to `/evaluation-service/...` locally, bypassing server-side double headers.
