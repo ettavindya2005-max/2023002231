@@ -1,8 +1,14 @@
 import axios from "axios";
-import { ACCESS_TOKEN } from "./config.js";
+import { getValidToken } from "./token_helper.js";
 
 export async function Log(stack, level, packageName, message) {
   try {
+    const token = await getValidToken();
+    if (!token) {
+      console.error("Could not obtain a valid token for logging.");
+      return;
+    }
+
     const response = await axios.post(
       "http://4.224.186.213/evaluation-service/logs",
       {
@@ -13,14 +19,14 @@ export async function Log(stack, level, packageName, message) {
       },
       {
         headers: {
-          Authorization: `Bearer ${ACCESS_TOKEN}`
+          Authorization: `Bearer ${token}`
         }
       }
     );
 
-    console.log(response.data);
+    console.log("Log sent successfully:", response.data);
 
   } catch (error) {
-    console.error(error.message);
+    console.error("Logger error:", error.response?.data || error.message);
   }
 }

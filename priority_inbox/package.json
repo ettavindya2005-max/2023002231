@@ -1,0 +1,10 @@
+{
+  "name": "priority_inbox",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AffordMed Campus Hiring Evaluation - Stage 6 Priority Inbox",
+  "main": "priority_inbox.js",
+  "dependencies": {
+    "axios": "^1.7.9"
+  }
+}

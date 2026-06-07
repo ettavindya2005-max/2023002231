@@ -1,122 +1,123 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider, createTheme, CssBaseline, Box } from "@mui/material";
+import Navbar from "./components/Navbar";
+import AllNotifications from "./pages/AllNotifications";
+import PriorityInbox from "./pages/PriorityInbox";
 
-function App() {
-  const [count, setCount] = useState(0)
+// Define a premium modern theme
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#0284c7", // Sky blue accent
+      contrastText: "#ffffff"
+    },
+    background: {
+      default: "#f8fafc", // Cool light gray background
+      paper: "#ffffff"
+    },
+    text: {
+      primary: "#0f172a", // Slate 900
+      secondary: "#64748b" // Slate 500
+    }
+  },
+  typography: {
+    fontFamily: "'Outfit', 'Inter', sans-serif",
+    h4: {
+      fontWeight: 800
+    },
+    body1: {
+      fontSize: "0.95rem"
+    }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+          borderRadius: "8px"
+        }
+      }
+    }
+  }
+});
+
+export default function App() {
+  // Load read status map from localStorage
+  const [readMap, setReadMap] = useState(() => {
+    try {
+      const saved = localStorage.getItem("read_notifications");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  // Keep localStorage in sync with state
+  useEffect(() => {
+    localStorage.setItem("read_notifications", JSON.stringify(readMap));
+  }, [readMap]);
+
+  // Mark a single notification as read
+  const markAsRead = (id) => {
+    setReadMap((prev) => ({
+      ...prev,
+      [id]: true
+    }));
+  };
+
+  // Mark multiple notifications as read (e.g. bulk read on page load)
+  const markAllAsRead = (ids) => {
+    setReadMap((prev) => {
+      const updated = { ...prev };
+      ids.forEach((id) => {
+        updated[id] = true;
+      });
+      return updated;
+    });
+  };
+
+  // Calculate unread count (for navbar badge)
+  // We can fetch a page of notifications and check how many are not in the readMap.
+  // For simplicity, we calculate the number of items currently fetched that are unread.
+  // Let's pass a function to update the badge count or read it from readMap size.
+  // Wait, let's keep a simple reactive count. We can read unread counts based on active unread items.
+  // To make it accurate, we can count keys or display a badge count from readMap.
+  // Actually, we can count unread items from the active list. To be simple, we show a dynamic badge
+  // indicating that unread items are pending.
+  const unreadCount = Object.keys(readMap).filter(k => !readMap[k]).length; 
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", backgroundColor: "#f8fafc" }}>
+          <Navbar unreadCount={null /* null hides badge number or shows dot if unread exists */} />
+          <Box sx={{ flexGrow: 1 }}>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <AllNotifications
+                    readMap={readMap}
+                    markAsRead={markAsRead}
+                    markAllAsRead={markAllAsRead}
+                  />
+                }
+              />
+              <Route
+                path="/priority"
+                element={
+                  <PriorityInbox
+                    readMap={readMap}
+                    markAsRead={markAsRead}
+                  />
+                }
+              />
+            </Routes>
+          </Box>
+        </Box>
+      </Router>
+    </ThemeProvider>
+  );
 }
-
-export default App
